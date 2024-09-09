@@ -55,45 +55,50 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
     email: "",
     password: "",
   });
+  console.log(formData);
+
   const [message, setMessage] = useState("");
 
-  // ฟังก์ชันจัดการการเปลี่ยนแปลงในฟอร์ม
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ฟังก์ชันจัดการการส่งฟอร์ม
   const handleRegister = async (e) => {
     e.preventDefault();
-    setMessage(""); // รีเซ็ตข้อความ
-  
     try {
-      console.log('Sending formData:', formData); // ดูข้อมูลที่ถูกส่งไป
-  
-      const res = await fetch("/api/auth/register.js", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-  
-      console.log('Response status:', res.status); // ดูสถานะการตอบกลับ
-  
+
       const data = await res.json();
-      console.log('Response data:', data); // ดูข้อมูลที่ได้รับกลับมา
-  
-      if (res.status === 201) {
-        setMessage("Registration successful!"); // แสดงข้อความสำเร็จ
+      if (res.ok) {
+        setMessage(data.message);
       } else {
-        setMessage(data.message || "Registration failed."); // แสดงข้อความเมื่อเกิดข้อผิดพลาด
+        setMessage(data.message || "Registration failed");
       }
     } catch (error) {
-      console.error('Error during registration:', error); // แสดงข้อผิดพลาด
-      setMessage("An error occurred. Please try again.");
+      console.error(error);
+      setMessage("An error occurred");
     }
   };
-  
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    const { username, ...restFormData } = formData;
+    console.log(restFormData);
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(restFormData),
+    });
+  };
 
   return (
     <div
@@ -107,19 +112,31 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
       {/* ฟอร์มล็อกอิน */}
       <div className="form-box login">
         <h2>Login</h2>
-        <form action="#" autocomplete="off">
+        <form onSubmit={handleLogin} autoComplete="off">
           <div className="input-box">
             <span className="icon">
               <ion-icon name="mail"></ion-icon>
             </span>
-            <input type="email" required />
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+            />
             <label>Email</label>
           </div>
           <div className="input-box">
             <span className="icon">
               <ion-icon name="lock-closed"></ion-icon>
             </span>
-            <input type="password" required />
+            <input
+              type="password"
+              name="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+            />
             <label>Password</label>
           </div>
           <div className="remember-forgot">

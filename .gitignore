@@ -2,3 +2,9 @@
 
 # dependencies
 /test
+/prisma
+my-app/prisma/users.db
+my-app/prisma/users.db
+my-app/prisma/users.db
+my-app/.gitignore
+.gitignore
