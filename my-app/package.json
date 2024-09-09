@@ -10,10 +10,15 @@
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
+    "bcrypt": "^5.1.1",
+    "bootstrap-icons": "^1.11.3",
+    "ionicons": "^7.4.0",
     "matter-js": "^0.20.0",
-    "next": "14.2.8",
+    "next": "^14.2.8",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.3.0",
+    "webpack": "^5.94.0"
   },
   "devDependencies": {
     "eslint": "^8",

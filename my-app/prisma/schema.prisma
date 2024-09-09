@@ -1,17 +1,16 @@
-// prisma/schema.prisma
-
-datasource db {
-  provider = "sqlite"
-  url      = "file:./users.db" // เปลี่ยนชื่อไฟล์เป็น users.db
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")  // อ้างอิงตัวแปร DATABASE_URL
+}
+
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String
+  password  String
   createdAt DateTime @default(now())
 }
