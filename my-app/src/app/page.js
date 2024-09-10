@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link"; // นำเข้า Link จาก Next.js
+import Header from "@/components/Header";
 
 export default function Home() {
   return (
@@ -84,7 +85,7 @@ export default function Home() {
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="/simulation"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -95,7 +96,7 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Go to nextjs.org →
+          Go to simulation →
         </a>
       </footer>
     </div>

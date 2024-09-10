@@ -1,29 +1,46 @@
-"use client"; // ระบุให้คอมโพเนนต์ทำงานที่ฝั่ง Client
+"use client";
+import * as THREE from "three";
+import { useEffect } from "react";
 
-import { useEffect } from 'react';
-import Matter from 'matter-js';
-
-export default function Simulation() {
+const BlackHoleSimulation = () => {
   useEffect(() => {
-    const engine = Matter.Engine.create();
-    const render = Matter.Render.create({
-      element: document.body,
-      engine: engine
-    });
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-    const boxA = Matter.Bodies.rectangle(400, 200, 80, 80);
-    const boxB = Matter.Bodies.rectangle(450, 50, 80, 80);
-    const ground = Matter.Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 
-    Matter.World.add(engine.world, [boxA, boxB, ground]);
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const box_mesh = new THREE.Mesh(geometry, material);
+    const edges = new THREE.EdgesGeometry(geometry);
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const wireframe = new THREE.LineSegments(edges, lineMaterial);
+    scene.add(wireframe);
+    scene.add(box_mesh);
 
-    Matter.Engine.run(engine);
-    Matter.Render.run(render);
+    const box = new THREE.Group();
+    box.add(box_mesh);
+    box.add(wireframe);
+    scene.add(box);
+
+    camera.position.z = 5;
+
+    // สร้าง Animation
+    const animate = () => {
+      box.rotation.x += 0.01;
+      box.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    };
+    renderer.setAnimationLoop(animate);
   }, []);
+  return null;
+};
 
-  return (
-    <div>
-      <h1>Physics Simulation</h1>
-    </div>
-  );
-}
+export default BlackHoleSimulation;
