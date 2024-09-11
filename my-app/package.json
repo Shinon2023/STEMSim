@@ -13,6 +13,7 @@
     "@fontsource/orbitron": "^5.0.21",
     "@prisma/client": "^5.19.1",
     "ammo.js": "^0.0.10",
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "bootstrap-icons": "^1.11.3",

@@ -1,31 +1,28 @@
+"use client";
 import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react"; // นำเข้า useSession และ signOut จาก next-auth/react
 import "./../app/login-register_style.css";
 import "@fontsource/orbitron"; 
 import Image from "next/image";
 
 export default function Header({ toggleAuthForm }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { data: session, status } = useSession(); // ใช้ useSession เพื่อตรวจสอบ session
   const [loading, setLoading] = useState(true);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    window.location.reload();
+    signOut(); // ใช้ signOut จาก NextAuth เพื่อล็อกเอาท์
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log(token);
-    if (token) {
-      setIsLoggedIn(true);
+    if (status !== "loading") {
+      setLoading(false); // เมื่อสถานะไม่เป็น "loading" แล้ว เราจะถือว่า session ได้รับการตรวจสอบแล้ว
     }
-    setLoading(false);
-  }, []);
+  }, [status]);
 
   if (loading) {
-    return null;
+    return null; // รอให้การตรวจสอบ session เสร็จสิ้นก่อนที่จะแสดง header
   }
-  console.log()
+
   return (
     <header className="flex items-center justify-between w-full py-4 px-8">
       <div className="flex items-center">
@@ -53,11 +50,11 @@ export default function Header({ toggleAuthForm }) {
         <a href="#" className="mx-2">
           Contact
         </a>
-        {!isLoggedIn ? ( // แสดงปุ่ม Login ถ้าไม่ได้ล็อกอิน
+        {!session ? ( // แสดงปุ่ม Login ถ้าไม่มี session (ยังไม่ได้ล็อกอิน)
           <button className="btnLogin-popup mx-2" onClick={toggleAuthForm}>
             Login
           </button>
-        ) : ( // แสดงปุ่ม Logout ถ้าล็อกอินสำเร็จ
+        ) : ( // แสดงปุ่ม Logout ถ้ามี session (ล็อกอินสำเร็จ)
           <button className="btnLogin-popup mx-2" onClick={handleLogout}>
             Logout
           </button>

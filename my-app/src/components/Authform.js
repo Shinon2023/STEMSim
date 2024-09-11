@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import "./../app/login-register_style.css";
 
 export default function AuthForm({ isPopupActive, handleClosePopup }) {
   const wrapperRef = useRef(null);
+  const { data: session, status } = useSession(); // ใช้ session จาก NextAuth
 
   useEffect(() => {
     const script1 = document.createElement("script");
@@ -50,7 +51,6 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
     email: "",
     password: "",
   });
-  console.log(formData);
 
   const [message, setMessage] = useState("");
 
@@ -81,34 +81,42 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
     }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { username, ...restFormData } = formData;
-    console.log(restFormData);
-    
+  const handleGoogleLogin = async () => {
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(restFormData),
-      });
-      
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        setMessage("Login successful!");
-        window.location.reload();
+      const result = await signIn("google", { redirect: false });
+
+      if (result.error) {
+        console.error(result.error);
       } else {
-        setMessage(data.message || "Login failed");
+        window.location.reload(); // เปลี่ยนเส้นทางหลังจากล็อกอินสำเร็จ
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("Google login error:", error);
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const { email, password } = formData;
+
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result.error) {
+        setMessage(result.error || "Login failed");
+      } else {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Credentials login error:", error);
       setMessage("An error occurred while trying to log in");
     }
   };
-  
+
   return (
     <div
       ref={wrapperRef}
@@ -156,7 +164,7 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
             </label>
             <a href="#">Forgot Password?</a>
           </div>
-          <button className="btn mb-5" onClick={() => signIn("google")}>
+          <button className="btn mb-5" onClick={handleGoogleLogin}>
             Sign in with Google
           </button>
           <button type="submit" className="btn">
@@ -226,7 +234,7 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
           <button type="submit" className="btn">
             Register
           </button>
-          {message && <p className="mt-[10px]" >{message}</p>}
+          {message && <p className="mt-[10px]">{message}</p>}
           <div className="login-register">
             <p>
               Already have an account?
