@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { signIn } from "next-auth/react";
 import "./../app/login-register_style.css";
 
 export default function AuthForm({ isPopupActive, handleClosePopup }) {
@@ -28,18 +29,12 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
     const wrapper = wrapperRef.current; // เข้าถึง wrapper element ผ่าน useRef
     const loginLink = document.querySelector(".login-link");
     const registerLink = document.querySelector(".register-link");
-
-    // เมื่อคลิกที่ register link ให้เพิ่ม class 'active'
     registerLink.addEventListener("click", () => {
       wrapper.classList.add("active");
     });
-
-    // เมื่อคลิกที่ login link ให้ลบ class 'active'
     loginLink.addEventListener("click", () => {
       wrapper.classList.remove("active");
     });
-
-    // Cleanup เพื่อป้องกัน memory leaks
     return () => {
       registerLink.removeEventListener("click", () => {
         wrapper.classList.add("active");
@@ -88,22 +83,37 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     const { username, ...restFormData } = formData;
     console.log(restFormData);
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(restFormData),
-    });
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(restFormData),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        setMessage("Login successful!");
+      } else {
+        setMessage(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      setMessage("An error occurred while trying to log in");
+    }
   };
 
   return (
     <div
       ref={wrapperRef}
-      className={`wrapper ${isPopupActive ? "active-popup" : ""}`}
+      className={`wrapper ${
+        isPopupActive ? "active-popup" : ""
+      } bg-black/[.05]`}
     >
       <span className="icon-close" onClick={handleClosePopup}>
         <ion-icon name="close"></ion-icon>
@@ -145,9 +155,14 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
             </label>
             <a href="#">Forgot Password?</a>
           </div>
+          <button className="btn mb-5" onClick={() => signIn("google")}>
+            Sign in with Google
+          </button>
           <button type="submit" className="btn">
             Login
           </button>
+          {/* วางข้อความผลลัพธ์หลังฟอร์ม */}
+          {message && <p className="mb-[10px] mt-[10px]">{message}</p>}
           <div className="login-register">
             <p>
               Don't have an account?
@@ -210,7 +225,7 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
           <button type="submit" className="btn">
             Register
           </button>
-          {message && <p>{message}</p>}
+          {message && <p className="mt-[10px]">{message}</p>}
           <div className="login-register">
             <p>
               Already have an account?

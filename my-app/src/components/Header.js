@@ -1,22 +1,56 @@
+import { useEffect, useState } from "react";
 import "./../app/login-register_style.css";
+import "@fontsource/orbitron"; 
+import Image from "next/image";
 
 export default function Header({ toggleAuthForm }) {
-  const reloadHome = () => {
-    window.location.href = "/"; // เปลี่ยน URL และรีโหลดหน้าใหม่
-  };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return null;
+  }
 
   return (
-    <header>
-      <h2 className="logo">Physics Simulation</h2>
+    <header className="flex items-center justify-between w-full py-4 px-8">
+      <div className="flex items-center">
+        <Image
+          src="/img/Logo-White.png"
+          alt="Logo"
+          width={65}
+          height={65}
+          priority
+        />
+        <h2 className="font-sans font-semibold text-5xl text-white select-none ml-2">
+          STEMSim
+        </h2>
+      </div>
       <nav className="navigation">
-        <a href="#" onClick={reloadHome}>Home</a>
-        <a href="#">About</a>
-        <a href="#">Service</a>
-        <a href="#">Contact</a>
-        {/* เมื่อคลิกปุ่ม Login ให้เรียกฟังก์ชัน toggleAuthForm */}
-        <button className="btnLogin-popup" onClick={toggleAuthForm}>
-          Login
-        </button>
+        <a href="/" className="mx-2">
+          Home
+        </a>
+        <a href="#" className="mx-2">
+          AboutUs
+        </a>
+        <a href="#" className="mx-2">
+          Service
+        </a>
+        <a href="#" className="mx-2">
+          Contact
+        </a>
+        {!isLoggedIn && ( // แสดงปุ่ม Login ถ้าไม่ได้ล็อกอิน
+          <button className="btnLogin-popup mx-2" onClick={toggleAuthForm}>
+            Login
+          </button>
+        )}
       </nav>
     </header>
   );
