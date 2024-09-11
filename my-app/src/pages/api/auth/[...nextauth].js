@@ -3,8 +3,13 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
+
+function generatePassword(length = 12) {
+  return crypto.randomBytes(length).toString('hex').slice(0, length);
+}
 
 export default NextAuth({
   providers: [
@@ -53,6 +58,8 @@ export default NextAuth({
   callbacks: {
     // ตรวจสอบผู้ใช้เมื่อทำการล็อกอินผ่าน Google หรือ Credential
     async signIn({ user, account, profile }) {
+      const password = generatePassword();
+      const hashedPassword = await bcrypt.hash(password, 10);
       if (account.provider === "google") {
         const userFromDb = await prisma.user.findUnique({
           where: { email: user.email },
@@ -64,7 +71,7 @@ export default NextAuth({
             data: {
               email: user.email,
               username: user.name || "Unnamed",
-              password: "", // Google Login ไม่ต้องใช้รหัสผ่าน
+              password: hashedPassword,
             },
           });
         }
