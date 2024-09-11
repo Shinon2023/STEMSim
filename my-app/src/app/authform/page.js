@@ -5,13 +5,10 @@ import Header from "@/components/Header";
 
 export default function LoginPage() {
   const [isPopupActive, setPopupActive] = useState(false);
-
-  // ฟังก์ชันเปิด popup โดยเพิ่ม class "active-popup"
   const handlePopup = () => {
     setPopupActive(true);
   };
 
-  // ฟังก์ชันปิด popup โดยลบ class "active-popup"
   const handleClosePopup = () => {
     setPopupActive(false);
   };

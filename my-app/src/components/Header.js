@@ -7,8 +7,15 @@ export default function Header({ toggleAuthForm }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log(token);
     if (token) {
       setIsLoggedIn(true);
     }
@@ -18,7 +25,7 @@ export default function Header({ toggleAuthForm }) {
   if (loading) {
     return null;
   }
-
+  console.log()
   return (
     <header className="flex items-center justify-between w-full py-4 px-8">
       <div className="flex items-center">
@@ -46,9 +53,13 @@ export default function Header({ toggleAuthForm }) {
         <a href="#" className="mx-2">
           Contact
         </a>
-        {!isLoggedIn && ( // แสดงปุ่ม Login ถ้าไม่ได้ล็อกอิน
+        {!isLoggedIn ? ( // แสดงปุ่ม Login ถ้าไม่ได้ล็อกอิน
           <button className="btnLogin-popup mx-2" onClick={toggleAuthForm}>
             Login
+          </button>
+        ) : ( // แสดงปุ่ม Logout ถ้าล็อกอินสำเร็จ
+          <button className="btnLogin-popup mx-2" onClick={handleLogout}>
+            Logout
           </button>
         )}
       </nav>

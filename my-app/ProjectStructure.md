@@ -1,0 +1,47 @@
+```
+└── 📁my-app
+    └── 📁prisma
+        └── 📁migrations
+        └── .env
+        └── schema.prisma
+        └── users.db
+    └── 📁public
+        └── 📁img
+            └── 1281008.jpg
+            └── Logo-Black.png
+            └── Logo-White.png
+    └── 📁src
+        └── 📁app
+            └── 📁authform
+                └── page.js
+            └── 📁fonts
+                └── GeistMonoVF.woff
+                └── GeistVF.woff
+            └── 📁simulation
+                └── page.js
+            └── favicon.ico
+            └── globals.css
+            └── layout.js
+            └── login-register_style.css
+            └── page.js
+        └── 📁components
+            └── AboutUs.js
+            └── Authform.js
+            └── Header.js
+        └── 📁pages
+            └── 📁api
+                └── 📁auth
+                    └── [...nextauth].js
+                └── login.js
+                └── register.js
+    └── .env.local
+    └── .eslintrc.json
+    └── .gitignore
+    └── jsconfig.json
+    └── next.config.mjs
+    └── package-lock.json
+    └── package.json
+    └── postcss.config.mjs
+    └── README.md
+    └── tailwind.config.js
+```

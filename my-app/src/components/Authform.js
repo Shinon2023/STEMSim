@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import "./../app/login-register_style.css";
 
 export default function AuthForm({ isPopupActive, handleClosePopup }) {
-  const wrapperRef = useRef(null); // อ้างอิง wrapper element
+  const wrapperRef = useRef(null);
 
   useEffect(() => {
     const script1 = document.createElement("script");
@@ -26,7 +26,7 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
   }, []);
 
   useEffect(() => {
-    const wrapper = wrapperRef.current; // เข้าถึง wrapper element ผ่าน useRef
+    const wrapper = wrapperRef.current;
     const loginLink = document.querySelector(".login-link");
     const registerLink = document.querySelector(".register-link");
     registerLink.addEventListener("click", () => {
@@ -85,7 +85,7 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
     e.preventDefault();
     const { username, ...restFormData } = formData;
     console.log(restFormData);
-
+    
     try {
       const res = await fetch("/api/login", {
         method: "POST",
@@ -94,11 +94,12 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
         },
         body: JSON.stringify(restFormData),
       });
-
+      
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem("token", data.token);
         setMessage("Login successful!");
+        window.location.reload();
       } else {
         setMessage(data.message || "Login failed");
       }
@@ -107,7 +108,7 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
       setMessage("An error occurred while trying to log in");
     }
   };
-
+  
   return (
     <div
       ref={wrapperRef}
@@ -225,7 +226,7 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
           <button type="submit" className="btn">
             Register
           </button>
-          {message && <p className="mt-[10px]">{message}</p>}
+          {message && <p className="mt-[10px]" >{message}</p>}
           <div className="login-register">
             <p>
               Already have an account?
