@@ -25,6 +25,8 @@ export default NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        remember: { label: "Remember me", type: "checkbox" },
+
       },
       async authorize(credentials) {
         // ตรวจสอบผู้ใช้ในฐานข้อมูล
@@ -51,6 +53,7 @@ export default NextAuth({
           id: user.id,
           email: user.email,
           username: user.username,
+          remember: credentials.remember,
         };
       },
     }),

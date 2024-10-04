@@ -84,7 +84,9 @@ header{
 
 .wrapper{
     position: relative;
-    width: 400px;
+    top: 5vh;
+    left: -2.5vw;
+    width: 35vw;
     height: 550px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .5);
@@ -109,13 +111,13 @@ header{
 }
 
 .wrapper .form-box.login {
-    transition: transform .18s ease;
+    transition: transform .36s ease;
     transform: translateX(0);
 }
 
 .wrapper.active .form-box.login {
     transition: none;
-    transform: translateX(-400px);
+    transform: translateX(50vw);
 }
 
 
@@ -126,7 +128,7 @@ header{
 .wrapper .form-box.register {
     position: absolute;
     transition: none;
-    transform: translateX(400px);
+    transform: translateX(50vw);
 }
 
 .wrapper.active .form-box.register {

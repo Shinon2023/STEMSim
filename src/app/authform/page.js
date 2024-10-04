@@ -1,17 +1,9 @@
 "use client";
-import { useState } from "react";
+
 import AuthForm from "@/components/Authform";
 import Header from "@/components/Header";
 
-export default function LoginPage() {
-  const [isPopupActive, setPopupActive] = useState(false);
-  const handlePopup = () => {
-    setPopupActive(true);
-  };
-
-  const handleClosePopup = () => {
-    setPopupActive(false);
-  };
+export default function LoginPage({ handlePopup, handleClosePopup, isPopupActive }) {
 
   return (
     <div>

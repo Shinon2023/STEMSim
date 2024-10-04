@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import "./../app/login-register_style.css";
 
 export default function AuthForm({ isPopupActive, handleClosePopup }) {
   const wrapperRef = useRef(null);
-  const { data: session, status } = useSession(); // ใช้ session จาก NextAuth
 
   useEffect(() => {
     const script1 = document.createElement("script");
@@ -160,7 +159,6 @@ export default function AuthForm({ isPopupActive, handleClosePopup }) {
           </div>
           <div className="remember-forgot">
             <label>
-              <input type="checkbox" /> Remember me
             </label>
             <a href="#">Forgot Password?</a>
           </div>
